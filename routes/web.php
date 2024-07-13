@@ -23,8 +23,15 @@ Route::get('/greeting',function(){
     echo 'welcome';
 });
 
-Route::redirect('/false','/greeting',301);
+Route::get('/dashboard', function () {
+    return view('dashboard');
+})->middleware(['auth', 'verified'])->name('dashboard');
 
+Route::middleware('auth')->group(function () {
+    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
+    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
+    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+});
 
 // routes/web.php
 Route::post('/detect-objects', [ObjectDetectionController::class, 'detectObjects'])->name('detect.objects');
